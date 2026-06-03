@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 
-DEFAULT_PATHS = [Path("scripts"), Path("data")]
+DEFAULT_PATHS = [Path("scripts")]
 DEFAULT_COMMAND = ["make", "preprocess", "render"]
 POLL_INTERVAL_SECONDS = 0.5
 

@@ -59,7 +59,7 @@ def render_timeline(title, uptime, days, display_hints=False, large=False):
 
 def render_global_status(model):
     return f"""
-      <section class="flex flex-col gap-2 p-4 bg-white rounded-lg shadow border border-slate-300">
+      <section id="main-section" class="flex flex-col gap-2 p-4 bg-white rounded-lg shadow border border-slate-300">
         <div class="flex flex-col md:flex-row items-center justify-between mb-4">
             <h2 class="text-2xl font-bold">
                 Last {model['window']} days uptime
@@ -75,6 +75,10 @@ def render_global_status(model):
             </div>
         </div>
         {render_timeline("Yandex Cloud status", model["global"]["uptime"], model["global"]["days"], display_hints=True, large=True)}
+        <div class="text-sm mt-2 text-end __noprint">
+            <a href="https://github.com/kapitanov/yc-status-page" target="_blank" class="text-slate-500 hover:text-slate-600 underline">GitHub Repository</a>
+            <a href="#" class="text-slate-500 hover:text-slate-600 underline ml-4" onclick="copyToClipboard('main-section'); return false;">Export as image</a>
+        </div>
       </section>
     """
 
@@ -105,6 +109,8 @@ def render(model):
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>The Unofficial Yandex Cloud Status Page</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/downloadjs@1.4.7/download.min.js"></script>
   </head>
   <body class="bg-slate-100">
     <main class="flex flex-col gap-8 max-w-4xl mx-auto p-8">
@@ -127,18 +133,17 @@ def render(model):
         </p>
         <p class="text-xs text-slate-600 mt-4">
             Heavily inspired by
-            <a href="https://mrshu.github.io/github-statuses/" class="text-slate-500 hover:text-slate-600 underline">
-                The Missing GitHub Status Page
-            </a>.
+            <a href="https://mrshu.github.io/github-statuses/" class="text-slate-500 hover:text-slate-600 underline">The Missing GitHub Status Page</a>.
         </p>
       </section>
       {render_global_status(model)}
       {render_per_service_status(model)}
     </main>
+    <script src="app.js"></script>
   </body>
 </html>
     """
-    
+
     return html
 
 def render_incidents(input_file: str, output_file: str) -> None:
