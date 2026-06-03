@@ -1,0 +1,16 @@
+[project]
+name = "unofficial-yandex-cloud-status"
+version = "0.1.0"
+description = "Parse Yandex Cloud incident history and render incident timelines."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    'requests',
+]
+
+[tool.uv]
+package = false
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"

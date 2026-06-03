@@ -1,0 +1,60 @@
+name: Fetch
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch: # Required even though this is currently empty
+  schedule:
+    - cron: '5 4 * * *' # Run every day at 04:05 
+
+permissions:
+  contents: write
+
+jobs:
+  parse:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v3
+      - name: Run parser
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 30
+          max_attempts: 5
+          retry_on: error
+          retry_wait_seconds: 30
+          command: |
+            mkdir -p data
+            uv run python run.py
+      - name: Commit outputs
+        run: |
+          if git status --porcelain | grep .; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add web/index.html
+            git commit -m "automation: update"
+            max_attempts=3
+            attempt=1
+            while true; do
+              if git push origin HEAD:master; then
+                break
+              fi
+
+              if [ "$attempt" -ge "$max_attempts" ]; then
+                echo "Push failed after ${max_attempts} attempts."
+                exit 1
+              fi
+
+              echo "Push rejected; rebasing on origin/master and retrying..."
+              git pull --rebase origin master
+              attempt=$(( attempt + 1 ))
+            done
+          else
+            echo "No changes to commit."
+          fi
