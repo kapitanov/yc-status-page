@@ -76,6 +76,16 @@ class RenderTests(unittest.TestCase):
         self.assertIn("Compute Cloud", html)
         self.assertIn("bg-red-500", html)
         self.assertIn("bg-yellow-500", html)
+        self.assertIn('<meta name="description" content="Unofficial Yandex Cloud status overview for the last 3 days." />', html)
+        self.assertIn('<meta property="og:title" content="The Unofficial Yandex Cloud Status Page" />', html)
+        self.assertIn('<meta property="og:description" content="Unofficial Yandex Cloud status overview for the last 3 days." />', html)
+        self.assertIn('<meta property="og:type" content="website" />', html)
+        self.assertIn('<meta property="og:url" content="https://kapitanov.github.io/yc-status-page/" />', html)
+        self.assertIn('<meta property="og:image" content="https://kapitanov.github.io/yc-status-page/preview.png" />', html)
+        self.assertIn('<meta name="twitter:card" content="summary_large_image" />', html)
+        self.assertIn('<meta name="twitter:title" content="The Unofficial Yandex Cloud Status Page" />', html)
+        self.assertIn('<meta name="twitter:description" content="Unofficial Yandex Cloud status overview for the last 3 days." />', html)
+        self.assertIn('<meta name="twitter:image" content="https://kapitanov.github.io/yc-status-page/preview.png" />', html)
 
 
 if __name__ == "__main__":

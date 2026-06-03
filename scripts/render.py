@@ -5,12 +5,19 @@ from html import escape
 import json
 import sys
 
+SITE_URL = "https://kapitanov.github.io/yc-status-page/"
+PREVIEW_IMAGE_URL = "https://kapitanov.github.io/yc-status-page/preview.png"
+
 
 def format_date(date_slug):
     return datetime.strptime(str(date_slug), "%Y%m%d").strftime("%b %d, %Y")
 
 def format_uptime(value):
     return f"{value:.2f}% uptime"
+
+
+def build_page_description(model):
+    return f"Unofficial Yandex Cloud status overview for the last {model['window']} days."
 
 def render_timeline_day(day, large=False):
     class_name = "bg-green-500"
@@ -102,11 +109,22 @@ def render_per_service_status(model):
     """
 
 def render(model):
+    description = escape(build_page_description(model))
     html = f"""<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="{description}" />
+    <meta property="og:title" content="The Unofficial Yandex Cloud Status Page" />
+    <meta property="og:description" content="{description}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{SITE_URL}" />
+    <meta property="og:image" content="{PREVIEW_IMAGE_URL}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Unofficial Yandex Cloud Status Page" />
+    <meta name="twitter:description" content="{description}" />
+    <meta name="twitter:image" content="{PREVIEW_IMAGE_URL}" />
     <title>The Unofficial Yandex Cloud Status Page</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js"></script>
